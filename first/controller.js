@@ -3,12 +3,12 @@ const { v4: uuidv4 } = require('uuid');
 
 const Pool = require('pg').Pool
 const pool = new Pool({
-	user: 'huynd',
-	host: 'dpg-cpjvnfi1hbls738ap57g-a.singapore-postgres.render.com',
-	database: 'my_db_4ljj',
-	password: 'oM8SH1VwwsthnUXNNuqJMPk7WQIp8OYL',
-	dialect: 'postgres',
-	port: 5432,
+    user: 'huynd',
+    host: 'dpg-cpjvnfi1hbls738ap57g-a',
+    database: 'my_db_4ljj',
+    password: 'oM8SH1VwwsthnUXNNuqJMPk7WQIp8OYL',
+    dialect: 'postgres',
+    port: 5432,
     connectionTimeoutMillis: 30000
 });
 
