@@ -124,8 +124,6 @@ module.exports.user_login = async (req, res) => {
         }
     } catch (err) {
         console.log(err.message);
-        res.status(500).json({
-            error: err.message,
-        });
+        res.status(500).json(baseResponse(null, 500, err.message));
     }
 };
