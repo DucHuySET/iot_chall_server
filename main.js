@@ -53,8 +53,8 @@ app.get('/', (req, res, next) => {
 	res.send('Welcome to Aithings\'s server for IoTChallange 2024!')
 })
 
-app.use('/login', controller.user_login);
-app.use('/register', controller.user_register);
+app.use('/api/login', controller.user_login);
+app.use('/api/register', controller.user_register);
 
 // Require the Routes API 
 // Create a Server and run it on the port 3000
