@@ -50,12 +50,7 @@ pool.connect((err, client, release) => {
 })
 
 app.get('/', (req, res, next) => {
-	console.log("user table :");
-	pool.query('Select * from public."user"')
-		.then(testData => {
-			console.log(testData);
-			res.send(testData.rows);
-		})
+	res.send('Welcome to Aithings\'s server for IoTChallange 2024!')
 })
 
 app.use('/login', controller.user_login);
