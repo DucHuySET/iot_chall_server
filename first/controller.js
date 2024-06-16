@@ -1,6 +1,6 @@
 
 const { v4: uuidv4 } = require('uuid');
-const baseResponse = require('../shared/utils/response_utils');
+const baseResponse = require('../src/shared/utils/response_utils');
 
 const Pool = require('pg').Pool
 const pool = new Pool({
