@@ -10,7 +10,7 @@
 function baseResponse(data, code, errorMessage = null) {
     return {
         data: typeof data === 'string' ? data : JSON.stringify(data), // Kiểm tra kiểu dữ liệu của data
-        code: code,
+        code: code.toString(),
         errorMessage: errorMessage
     };
 }
