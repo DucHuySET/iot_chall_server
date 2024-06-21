@@ -7,6 +7,8 @@ deviceRouter
 .post("/addmygateway", asynMiddlewareHandler(deviceController.addMyGateway))
 .get("/getnewdevice", asynMiddlewareHandler(deviceController.getAllNewDevice))
 .post("/addnewdevice",asynMiddlewareHandler(deviceController.addNewDevice))
+.get("/infor/rgb/:address", asynMiddlewareHandler(deviceController.rgbInfor))
+.patch("/control/rgb/:address",asynMiddlewareHandler(deviceController.rgbControl))
 
 
 export default deviceRouter;

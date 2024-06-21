@@ -23,7 +23,47 @@ class DeviceController {
     const { type, uuid, mac } = req.body;
     return res
       .status(201)
-      .json(await deviceService.addNewDevice({ type, uuid, mac,clientID }));
+      .json(await deviceService.addNewDevice({ type, uuid, mac, clientID }));
+  };
+
+  // -----------------------------------RGB---------------------------------//
+  rgbInfor = async (req, res, next) => {
+    const RGBAddress = req.params.address;
+    console.log("GET :: RGB infor", RGBAddress);
+    const clientID = req.get("CLIENT_ID");
+    return res
+      .status(201)
+      .json(await deviceService.rgbInfor({ RGBAddress, clientID }));
+  };
+
+  rgbControl = async (req, res, next) => {
+    const clientID = req.get("CLIENT_ID");
+    const unicastAddress = req.params.address;
+    if (req.query.groupaddress) {
+      const groupAddress = req.query.groupaddress;
+      const { red, green, blue } = req.body;
+      return res.status(201).json(
+        await deviceService.rgbControl({
+          red,
+          green,
+          blue,
+          clientID,
+          unicastAddress,
+          groupAddress,
+        })
+      );
+    } else {
+      const { red, green, blue } = req.body;
+      return res.status(201).json(
+        await deviceService.rgbControl({
+          red,
+          green,
+          blue,
+          clientID,
+          unicastAddress,
+        })
+      );
+    }
   };
 }
 export default new DeviceController();

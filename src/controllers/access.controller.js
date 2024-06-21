@@ -5,7 +5,7 @@ class AccessController {
     const { name, email, password } = req.body;
     console.log("[POST] :: Sign up ", req.body);
     return res
-      .status(201)
+      .status(200)
       .json(await AccessUserService.signUp({ name, email, password }));
   };
 
@@ -14,7 +14,7 @@ class AccessController {
     console.log("Email is ::", email);
     console.log("password is", password);
     return res
-      .status(201)
+      .status(200)
       .json(await AccessUserService.logIn({ email, password }));
   };
 }

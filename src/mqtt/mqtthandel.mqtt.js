@@ -24,7 +24,7 @@ const mqttHandle = async (topic, data) => {
       type: data.type,
       uuid: data.uuid,
       mac: data.mac,
-      user: data.userID,
+      user: data.clientID,
     });
     if (!detectedDevice) {
       console.log("Cannot update detected device");

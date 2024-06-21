@@ -28,8 +28,7 @@ class AccessUserService {
     }
 
     return {
-      Name: signupInFor.name,
-      Email: signupInFor.email,
+      message: "Sign up successfully !"
     };
   };
 
