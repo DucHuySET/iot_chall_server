@@ -21,8 +21,8 @@ FollowingService.use(cors());
 
 // init database
 mqttBrokerInit();
-subscribeTopic("/device/resgateway/x", 1);
-subscribeTopic("/device/detect/x", 1);
+subscribeTopic("/device/resgateway", 1);
+subscribeTopic("/device/detect", 1);
 subscribeTopic("/device/rgb", 1);
 subscribeTopic("/device/sensor", 1);
 subscribeTopic("/device/siren", 1);
