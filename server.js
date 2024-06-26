@@ -26,5 +26,5 @@ process.on("SIGNT", () => {
 });
 // Hello world
 
-// IoT Challenge AiThings
+
 
