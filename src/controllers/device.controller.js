@@ -26,6 +26,26 @@ class DeviceController {
       .json(await deviceService.addNewDevice({ type, uuid, mac, clientID }));
   };
 
+  deleteDevice = async (req, res, next) => {
+    console.log("POST :: Delete device");
+    const clientID = req.get("CLIENT_ID");
+    const { address, type } = req.body;
+    return res
+      .status(201)
+      .json(await deviceService.deleteDevice({ clientID, address, type }));
+  };
+
+  registerRoom = async (req, res, next) => {
+    console.log("PATCH :: register device for room 1");
+    const clientID = req.get("CLIENT_ID");
+    const { type, group, address } = req.body;
+    return res
+      .status(201)
+      .json(
+        await deviceService.registerRoom({ clientID, group, type, address })
+      );
+  };
+
   // -----------------------------------RGB---------------------------------//
   rgbInfor = async (req, res, next) => {
     const RGBAddress = req.params.address;
@@ -95,11 +115,20 @@ class DeviceController {
 
   encoderInfor = async (req, res, next) => {
     const EncoderAddress = req.params.address;
-    console.log("GET :: Door infor", EncoderAddress);
+    console.log("GET :: encoder infor", EncoderAddress);
     const clientID = req.get("CLIENT_ID");
     return res
       .status(201)
       .json(await deviceService.encoderInfor({ EncoderAddress, clientID }));
+  };
+
+  buttonInfor = async (req, res, next) => {
+    const ButtonAddress = req.params.address;
+    console.log("GET :: Button infor", ButtonAddress);
+    const clientID = req.get("CLIENT_ID");
+    return res
+      .status(201)
+      .json(await deviceService.buttonInfor({ ButtonAddress, clientID }));
   };
 }
 export default new DeviceController();
