@@ -21,6 +21,7 @@ app.use(cors());
 // init database
 instanceMongoDB;
 
+
 app.use("", ApplicationRouter);
 
 app.use("*", (req, res, next) => {

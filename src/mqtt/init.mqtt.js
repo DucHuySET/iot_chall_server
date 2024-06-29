@@ -1,6 +1,6 @@
 import mqtt from "mqtt";
 import dotenv from "dotenv";
-import { mqttHandle } from "./mqtthandel.mqtt.js";
+import { mqttHandle } from "./mqtthandle.mqtt.js";
 dotenv.config({ path: "./config.env" });
 
 dotenv.config();

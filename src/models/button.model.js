@@ -10,13 +10,12 @@ const buttonSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
-  Control: {
+  control: {
     type: Boolean,
     default: true,
   },
   address: {
     type: String,
-    unique: true,
   },
   Group: {
     type: Array,

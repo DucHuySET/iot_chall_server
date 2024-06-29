@@ -11,20 +11,20 @@ const sensorSchema = new mongoose.Schema({
     required: true,
   },
   temperature: {
-    type: Number,
-    default: 0,
+    type: String,
+    default: "",
   },
   humidity: {
-    type: Number,
-    default: 0,
+    type: String,
+    default: "",
   },
   smoke: {
-    type: Boolean,
-    default: 0,
+    type: String,
+    default: "",
   },
   address: {
     type: String,
-    unique: true,
+    default: "",
   },
   Group: {
     type: Array,

@@ -1,8 +1,10 @@
+import userModel from "../models/user.model.js";
 import deviceService from "../services/device.service.js";
 
 class DeviceController {
   addMyGateway = async (req, res, next) => {
-    const macGateway = req.body.mac;
+    // Lấy client ID
+    const macGateway = req.body.mac; // Lấy bỏi header
     const clientID = req.get("CLIENT_ID");
     console.log("POST :: FIND MY GATREWAY - ", macGateway);
     return res
@@ -56,36 +58,6 @@ class DeviceController {
       .json(await deviceService.rgbInfor({ RGBAddress, clientID }));
   };
 
-  rgbControl = async (req, res, next) => {
-    const clientID = req.get("CLIENT_ID");
-    const unicastAddress = req.params.address;
-    if (req.query.groupaddress) {
-      const groupAddress = req.query.groupaddress;
-      const { red, green, blue } = req.body;
-      return res.status(201).json(
-        await deviceService.rgbControl({
-          red,
-          green,
-          blue,
-          clientID,
-          unicastAddress,
-          groupAddress,
-        })
-      );
-    } else {
-      const { red, green, blue } = req.body;
-      return res.status(201).json(
-        await deviceService.rgbControl({
-          red,
-          green,
-          blue,
-          clientID,
-          unicastAddress,
-        })
-      );
-    }
-  };
-
   sensorInfor = async (req, res, next) => {
     const SensorAddress = req.params.address;
     console.log("GET :: Sensor infor", SensorAddress);
@@ -129,6 +101,118 @@ class DeviceController {
     return res
       .status(201)
       .json(await deviceService.buttonInfor({ ButtonAddress, clientID }));
+  };
+
+  rgbControl = async (req, res, next) => {
+    const clientID = req.get("CLIENT_ID");
+    const unicastAddress = req.params.address;
+    console.log("PATCH :: RGB Control");
+    if (req.query.groupaddress) {
+      const groupAddress = req.query.groupaddress;
+      const { red, green, blue } = req.body;
+      return res.status(201).json(
+        await deviceService.rgbControl({
+          red,
+          green,
+          blue,
+          clientID,
+          unicastAddress,
+          groupAddress,
+        })
+      );
+    } else {
+      const { red, green, blue } = req.body;
+      return res.status(201).json(
+        await deviceService.rgbControl({
+          red,
+          green,
+          blue,
+          clientID,
+          unicastAddress,
+        })
+      );
+    }
+  };
+
+  buttonControl = async (req, res, next) => {
+    const clientID = req.get("CLIENT_ID");
+    const unicastAddress = req.params.address;
+    console.log("PATCH :: BUTTON control");
+    if (req.query.groupaddress) {
+      const groupAddress = req.query.groupaddress;
+      const control = req.body;
+      return res.status(201).json(
+        await deviceService.buttonControl({
+          control,
+          clientID,
+          unicastAddress,
+          groupAddress,
+        })
+      );
+    } else {
+      const control = req.body;
+      return res.status(201).json(
+        await deviceService.buttonControl({
+          control,
+          clientID,
+          unicastAddress,
+        })
+      );
+    }
+  };
+
+  sirenControl = async (req, res, next) => {
+    const clientID = req.get("CLIENT_ID");
+    const unicastAddress = req.params.address;
+    console.log("PATCH :: Siren control");
+    if (req.query.groupaddress) {
+      const groupAddress = req.query.groupaddress;
+      const control = req.body;
+      return res.status(201).json(
+        await deviceService.sirenControl({
+          control,
+          clientID,
+          unicastAddress,
+          groupAddress,
+        })
+      );
+    } else {
+      const control = req.body;
+      return res.status(201).json(
+        await deviceService.sirenControl({
+          control,
+          clientID,
+          unicastAddress,
+        })
+      );
+    }
+  };
+
+  doorControl = async (req, res, next) => {
+    const clientID = req.get("CLIENT_ID");
+    const unicastAddress = req.params.address;
+    console.log("PATCH :: door control");
+    if (req.query.groupaddress) {
+      const groupAddress = req.query.groupaddress;
+      const control = req.body;
+      return res.status(201).json(
+        await deviceService.doorControl({
+          control,
+          clientID,
+          unicastAddress,
+          groupAddress,
+        })
+      );
+    } else {
+      const control = req.body;
+      return res.status(201).json(
+        await deviceService.doorControl({
+          control,
+          clientID,
+          unicastAddress,
+        })
+      );
+    }
   };
 }
 export default new DeviceController();

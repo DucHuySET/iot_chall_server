@@ -16,7 +16,8 @@ const doorSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    default: "",
+    default: "30032003",
+    require: true,
   },
   rfidCard: {
     type: Array,
@@ -24,7 +25,6 @@ const doorSchema = new mongoose.Schema({
   },
   address: {
     type: String,
-    unique: true,
   },
   Group: {
     type: Array,

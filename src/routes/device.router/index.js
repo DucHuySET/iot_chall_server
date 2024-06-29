@@ -8,14 +8,13 @@ deviceRouter
   .get("/getnewdevice", asynMiddlewareHandler(deviceController.getAllNewDevice))
   .post("/addnewdevice", asynMiddlewareHandler(deviceController.addNewDevice))
   .post("/deletedevice", asynMiddlewareHandler(deviceController.deleteDevice))
-  .patch("/registerroom/1", asynMiddlewareHandler(deviceController.registerRoom)) // group must be 0xC000
-  .patch("/registerroom/2", asynMiddlewareHandler(deviceController.registerRoom)) // group must be 0xC001
-  .get("/infor/button/:address", asynMiddlewareHandler(deviceController.buttonInfor))
-  .get("/infor/rgb/:address", asynMiddlewareHandler(deviceController.rgbInfor))
-  .patch(
-    "/control/rgb/:address",
-    asynMiddlewareHandler(deviceController.rgbControl)
+  .patch("/registerroom", asynMiddlewareHandler(deviceController.registerRoom))
+  .get(
+    "/infor/button/:address",
+    asynMiddlewareHandler(deviceController.buttonInfor)
   )
+  .get("/infor/rgb/:address", asynMiddlewareHandler(deviceController.rgbInfor))
+
   .get(
     "/infor/sensor/:address",
     asynMiddlewareHandler(deviceController.sensorInfor)
@@ -31,6 +30,22 @@ deviceRouter
   .get(
     "/infor/door/:address",
     asynMiddlewareHandler(deviceController.doorInfor)
-  );
+  )
+  .patch(
+    "/control/rgb/:address",
+    asynMiddlewareHandler(deviceController.rgbControl)
+  )
+  .patch(
+    "/control/button/:address",
+    asynMiddlewareHandler(deviceController.buttonControl)
+  )
+  .patch(
+    "/control/siren/:address",
+    asynMiddlewareHandler(deviceController.sirenControl)
+  )
+  .patch(
+    "/control/door/:address",
+    asynMiddlewareHandler(deviceController.doorControl)
+  )
 
 export default deviceRouter;

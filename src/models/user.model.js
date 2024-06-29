@@ -15,30 +15,31 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
-      trim:true,
-      maxLength:50,
+      trim: true,
+      maxLength: 50,
     },
     password: {
       type: String,
       required: true,
-      trim:true,
-      maxLength:100,
+      trim: true,
+      maxLength: 100,
     },
-    gateway:{
-      type:String,
+    gateway: {
+      type: String,
+      default: "",
     },
-    Unprovisioned : {
+    Unprovisioned: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "New device",
     },
-    button:{
+    button: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Button",
     },
-    RGB:{
+    RGB: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "RGB",
-    }
+    },
   },
   {
     timestamps: true,

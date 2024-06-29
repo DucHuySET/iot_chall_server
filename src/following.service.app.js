@@ -32,6 +32,7 @@ subscribeTopic("/device/siren", 1);
 subscribeTopic("/device/door", 1);
 subscribeTopic("/device/encoder", 1);
 subscribeTopic("/device/deletedeviceres", 1);
+subscribeTopic("/device/sensor/update");
 
 FollowingService.use("", FollowingServiceRouter);
 FollowingService.use("*", (req, res, next) => {

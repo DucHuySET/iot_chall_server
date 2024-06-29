@@ -8,7 +8,7 @@ const newDeviceSchema = new mongoose.Schema({
         required: true,
         enum:['button','encoder','rgb','sensor','siren','door'],
     },
-    uuid:{
+    uuid:{ 
         type:String,
         required:true,
         maxLength:50,
@@ -20,7 +20,7 @@ const newDeviceSchema = new mongoose.Schema({
         maxLength:50,
         unique:true
     },
-    user: {
+    user: { 
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true,

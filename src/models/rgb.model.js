@@ -32,7 +32,6 @@ const rgbLightSchema = new mongoose.Schema({
   },
   address: {
     type: String,
-    unique: true,
   },
   Group: {
     type: Array,

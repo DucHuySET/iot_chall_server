@@ -13,6 +13,7 @@ import ButtonModel from "../models/button.model.js";
 
 class DeviceService {
   addMyGateway = async (Gateway) => {
+    // Khi bắn bất cứ thứ gì về cho gateway, / cuối luôn là địa chỉ mac
     publishTopic(
       `/device/addgateway/${Gateway.macGateway}`,
       1,
@@ -72,6 +73,7 @@ class DeviceService {
         `/device/deletedevice/${User.gateway}`,
         1,
         JSON.stringify({
+          type: Infor.type,
           address: button.address,
         })
       );
@@ -88,6 +90,7 @@ class DeviceService {
         `/device/deletedevice/${User.gateway}`,
         1,
         JSON.stringify({
+          type:Infor.type,
           address: rgb.address,
         })
       );
@@ -104,6 +107,7 @@ class DeviceService {
         `/device/deletedevice/${User.gateway}`,
         1,
         JSON.stringify({
+          type: Infor.type,
           address: encoder.address,
         })
       );
@@ -120,6 +124,7 @@ class DeviceService {
         `/device/deletedevice/${User.gateway}`,
         1,
         JSON.stringify({
+          type: Infor.type,
           address: siren.address,
         })
       );
@@ -136,6 +141,7 @@ class DeviceService {
         `/device/deletedevice/${User.gateway}`,
         1,
         JSON.stringify({
+          type: Infor.type,
           address: sensor.address,
         })
       );
@@ -152,6 +158,7 @@ class DeviceService {
         `/device/deletedevice/${User.gateway}`,
         1,
         JSON.stringify({
+          type: Infor.type,
           address: door.address,
         })
       );
@@ -189,7 +196,7 @@ class DeviceService {
         );
       } else {
         publishTopic(
-          `/device/register/room1/${user.gateway}`,
+          `/device/register/room/${user.gateway}`,
           1,
           JSON.stringify({
             type: Infor.type,
@@ -203,7 +210,7 @@ class DeviceService {
           `Send command to register device ${Infor.type} have address ${Infor.address} to room 1 successfully, wait for respond`
         );
       }
-    }else if (Infor.type === "encoder") {
+    } else if (Infor.type === "encoder") {
       const encoder = await EncoderModel.findOne({
         user: Infor.clientID,
         address: Infor.address,
@@ -223,7 +230,7 @@ class DeviceService {
         );
       } else {
         publishTopic(
-          `/device/register/room1/${user.gateway}`,
+          `/device/register/room/${user.gateway}`,
           1,
           JSON.stringify({
             type: Infor.type,
@@ -237,7 +244,7 @@ class DeviceService {
           `Send command to register device ${Infor.type} have address ${Infor.address} to room 1 successfully, wait for respond`
         );
       }
-    }else if (Infor.type === "rgb") {
+    } else if (Infor.type === "rgb") {
       const rgb = await RGBModel.findOne({
         user: Infor.clientID,
         address: Infor.address,
@@ -257,7 +264,7 @@ class DeviceService {
         );
       } else {
         publishTopic(
-          `/device/register/room1/${user.gateway}`,
+          `/device/register/room/${user.gateway}`,
           1,
           JSON.stringify({
             type: Infor.type,
@@ -271,7 +278,7 @@ class DeviceService {
           `Send command to register device ${Infor.type} have address ${Infor.address} to room 1 successfully, wait for respond`
         );
       }
-    }else if (Infor.type === "siren") {
+    } else if (Infor.type === "siren") {
       const siren = await SirenModel.findOne({
         user: Infor.clientID,
         address: Infor.address,
@@ -291,7 +298,7 @@ class DeviceService {
         );
       } else {
         publishTopic(
-          `/device/register/room1/${user.gateway}`,
+          `/device/register/room/${user.gateway}`,
           1,
           JSON.stringify({
             type: Infor.type,
@@ -305,7 +312,7 @@ class DeviceService {
           `Send command to register device ${Infor.type} have address ${Infor.address} to room 1 successfully, wait for respond`
         );
       }
-    }else if (Infor.type === "sensor") {
+    } else if (Infor.type === "sensor") {
       const sensor = await SensorModel.findOne({
         user: Infor.clientID,
         address: Infor.address,
@@ -325,7 +332,7 @@ class DeviceService {
         );
       } else {
         publishTopic(
-          `/device/register/room1/${user.gateway}`,
+          `/device/register/room/${user.gateway}`,
           1,
           JSON.stringify({
             type: Infor.type,
@@ -339,8 +346,7 @@ class DeviceService {
           `Send command to register device ${Infor.type} have address ${Infor.address} to room 1 successfully, wait for respond`
         );
       }
-    }
-    else if (Infor.type === "door") {
+    } else if (Infor.type === "door") {
       const door = await DoorModel.findOne({
         user: Infor.clientID,
         address: Infor.address,
@@ -360,7 +366,7 @@ class DeviceService {
         );
       } else {
         publishTopic(
-          `/device/register/room1/${user.gateway}`,
+          `/device/register/room/${user.gateway}`,
           1,
           JSON.stringify({
             type: Infor.type,
@@ -392,62 +398,6 @@ class DeviceService {
       rgb,
       200,
       `get rgb with ID ${rgb.address} successfully`
-    );
-  };
-
-  rgbControl = async (Infor) => {
-    const user = await userModel.findById(Infor.clientID);
-    if (!user) {
-      return baseResponse(null, 403, "User exit");
-    }
-    if (Infor.groupAddress) {
-      console.log(Infor.groupAddress);
-      const rgb = await RGBModel.findOne({
-        user: Infor.clientID,
-        Group: { $in: Infor.groupAddress },
-      });
-      //  console.log(Infor.groupAddress);
-
-      if (!rgb) {
-        return baseResponse(null, 404, "This RGB not belong to you");
-      }
-      const payload = {
-        address: Infor.groupAddress,
-        red: Infor.red,
-        blue: Infor.blue,
-        green: Infor.green,
-      };
-      publishTopic(
-        `/device/rgb/control/${user.gateway}`,
-        1,
-        JSON.stringify(payload)
-      );
-    } else {
-      const rgb = await RGBModel.findOne({
-        user: Infor.clientID,
-        address: Infor.unicastAddress,
-      });
-      console.log(Infor.unicastAddress);
-
-      if (!rgb) {
-        return baseResponse(null, 404, "This RGB not belong to you");
-      }
-      const payload = {
-        address: Infor.unicastAddress,
-        red: Infor.red,
-        blue: Infor.blue,
-        green: Infor.green,
-      };
-      publishTopic(
-        `/device/rgb/control/${user.gateway}`,
-        1,
-        JSON.stringify(payload)
-      );
-    }
-    return baseResponse(
-      null,
-      200,
-      "Send RGB control successfully, wait for respond"
     );
   };
 
@@ -538,6 +488,220 @@ class DeviceService {
       button,
       200,
       `get button with ID ${button.address} successfully`
+    );
+  };
+
+  rgbControl = async (Infor) => {
+    const user = await userModel.findById(Infor.clientID);
+    if (!user) {
+      return baseResponse(null, 403, "User exit");
+    }
+    if (Infor.groupAddress) {
+      console.log(Infor.groupAddress);
+      const rgb = await RGBModel.findOne({
+        user: Infor.clientID,
+        Group: { $in: Infor.groupAddress },
+      });
+
+      if (!rgb) {
+        return baseResponse(null, 404, "This RGB not belong to you");
+      }
+      const payload = {
+        address: Infor.groupAddress,
+        red: Infor.red,
+        blue: Infor.blue,
+        green: Infor.green,
+      };
+      publishTopic(
+        `/device/control/${user.gateway}`,
+        1,
+        JSON.stringify(payload)
+      );
+    } else {
+      const rgb = await RGBModel.findOne({
+        user: Infor.clientID,
+        address: Infor.unicastAddress,
+      });
+      console.log(Infor.unicastAddress);
+
+      if (!rgb) {
+        return baseResponse(null, 404, "This RGB not belong to you");
+      }
+      const payload = {
+        type: "rgb",
+        address: Infor.unicastAddress,
+        red: Infor.red,
+        blue: Infor.blue,
+        green: Infor.green,
+      };
+      publishTopic(
+        `/device/control/${user.gateway}`,
+        1,
+        JSON.stringify(payload)
+      );
+    }
+    return baseResponse(
+      null,
+      200,
+      "Send RGB control successfully, wait for respond"
+    );
+  };
+
+  buttonControl = async (Infor) => {
+    const user = await userModel.findById(Infor.clientID);
+    if (!user) {
+      return baseResponse(null, 403, "User exit");
+    }
+    if (Infor.groupAddress) {
+      console.log(Infor.groupAddress);
+      const button = await ButtonModel.findOne({
+        user: Infor.clientID,
+        Group: { $in: Infor.groupAddress },
+      });
+
+      if (!button) {
+        return baseResponse(null, 404, "This button not belong to you");
+      }
+      const payload = {
+        type: "button",
+        address: Infor.groupAddress,
+        control: Infor.control,
+      };
+      publishTopic(
+        `/device/control/${user.gateway}`,
+        1,
+        JSON.stringify(payload)
+      );
+    } else {
+      const button = await ButtonModel.findOne({
+        user: Infor.clientID,
+        address: Infor.unicastAddress,
+      });
+      console.log(Infor.unicastAddress);
+
+      if (!button) {
+        return baseResponse(null, 404, "This button not belong to you");
+      }
+      const payload = {
+        type: "button",
+        address: Infor.unicastAddress,
+        control: Infor.control,
+      };
+      publishTopic(
+        `/device/control/${user.gateway}`,
+        1,
+        JSON.stringify(payload)
+      );
+    }
+    return baseResponse(
+      null,
+      200,
+      "Send Button control successfully, wait for respond"
+    );
+  };
+  sirenControl = async (Infor) => {
+    const user = await userModel.findById(Infor.clientID);
+    if (!user) {
+      return baseResponse(null, 403, "User exit");
+    }
+    if (Infor.groupAddress) {
+      console.log(Infor.groupAddress);
+      const siren = await SirenModel.findOne({
+        user: Infor.clientID,
+        Group: { $in: Infor.groupAddress },
+      });
+
+      if (!siren) {
+        return baseResponse(null, 404, "This button not belong to you");
+      }
+      const payload = {
+        type: "siren",
+        address: Infor.groupAddress,
+        control: Infor.control,
+      };
+      publishTopic(
+        `/device/control/${user.gateway}`,
+        1,
+        JSON.stringify(payload)
+      );
+    } else {
+      const siren = await sirenModel.findOne({
+        user: Infor.clientID,
+        address: Infor.unicastAddress,
+      });
+      console.log(Infor.unicastAddress);
+
+      if (!siren) {
+        return baseResponse(null, 404, "This button not belong to you");
+      }
+      const payload = {
+        type: "siren",
+        address: Infor.unicastAddress,
+        control: Infor.control,
+      };
+      publishTopic(
+        `/device/control/${user.gateway}`,
+        1,
+        JSON.stringify(payload)
+      );
+    }
+    return baseResponse(
+      null,
+      200,
+      "Send siren control successfully, wait for respond"
+    );
+  };
+
+  doorControl = async (Infor) => {
+    const user = await userModel.findById(Infor.clientID);
+    if (!user) {
+      return baseResponse(null, 403, "User exit");
+    }
+    if (Infor.groupAddress) {
+      console.log(Infor.groupAddress);
+      const door = await DoorModel.findOne({
+        user: Infor.clientID,
+        Group: { $in: Infor.groupAddress },
+      });
+
+      if (!door) {
+        return baseResponse(null, 404, "This door not belong to you");
+      }
+      const payload = {
+        type: "door",
+        address: Infor.groupAddress,
+        control: Infor.control,
+      };
+      publishTopic(
+        `/device/control/${user.gateway}`,
+        1,
+        JSON.stringify(payload)
+      );
+    } else {
+      const door = await DoorModel.findOne({
+        user: Infor.clientID,
+        address: Infor.unicastAddress,
+      });
+      console.log(Infor.unicastAddress);
+
+      if (!door) {
+        return baseResponse(null, 404, "This door not belong to you");
+      }
+      const payload = {
+        type: "door",
+        address: Infor.unicastAddress,
+        control: Infor.control,
+      };
+      publishTopic(
+        `/device/control/${user.gateway}`,
+        1,
+        JSON.stringify(payload)
+      );
+    }
+    return baseResponse(
+      null,
+      200,
+      "Send door control successfully, wait for respond"
     );
   };
 }

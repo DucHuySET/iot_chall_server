@@ -1,4 +1,3 @@
-import ErrorResponse from "../helpers/errorHandle.response.js";
 import newDeviceModel from "../models/new.model.js";
 import RGBModel from "../models/rgb.model.js";
 import SensorModel from "../models/sensor.model.js";
@@ -9,11 +8,16 @@ import userModel from "../models/user.model.js";
 import ButtonModel from "../models/button.model.js";
 
 const mqttHandle = async (topic, data) => {
+  const user = await userModel.findById(data.clientID);
+  if (!user) {
+    console.log("Dont have this user");
+    return;
+  }
   console.log(topic);
   console.log(data);
   if (topic === "/device/resgateway") {
     const updateGateway = await userModel.findOneAndUpdate(
-      { _id: data.clientID },
+      { _id: data.clientID }, // gateway bắn lên clientID và mac
       {
         gateway: data.mac,
       }
@@ -21,26 +25,15 @@ const mqttHandle = async (topic, data) => {
 
     if (!updateGateway) {
       console.log("Cannot find gateway ?");
+      return;
     } else {
       console.log("Update gateway for user name ::", updateGateway.name);
     }
   } else if (topic === "/device/detect") {
-    const checkDetected = await newDeviceModel.findOne({
-      user: data.clientID,
-      mac: data.mac,
-    });
-    if (checkDetected) {
-      console.log("This user have this device before, cannot add");
-      return;
-    } else {
-      console.log("Prepare add new device");
-    }
     const tryCheckDetectedDevice = await newDeviceModel.findOne({
-      uuid: data.uuid,
       mac: data.mac,
-      user: data.clientID,
     });
-    if (tryCheckDetectedDevice) {
+    if (tryCheckDetectedDevice || null) {
       console.log("This device save inside database before");
       return;
     }
@@ -164,7 +157,7 @@ const mqttHandle = async (topic, data) => {
       console.log("Preprare add new encoder ");
     }
     const newEncoder = await EncoderModel.create({
-      name: "Encoder",
+      name: "encoder",
       user: data.clientID,
       address: data.address,
     });
@@ -245,7 +238,7 @@ const mqttHandle = async (topic, data) => {
         console.log("this Not exist this encoder");
         return;
       } else {
-        const deleteencoder = await encoderModel.findOneAndDelete({
+        const deleteencoder = await EncoderModel.findOneAndDelete({
           address: data.address,
         });
         if (!deleteencoder) {
@@ -306,11 +299,6 @@ const mqttHandle = async (topic, data) => {
       }
     }
   } else if (topic === "/device/registerroom") {
-    const user = await userModel.findById(data.clientID);
-    if (!user) {
-      console.log("Not exist user");
-      return;
-    }
     if (data.type === "button") {
       const button = await ButtonModel.findOne({
         user: data.clientID,
@@ -334,13 +322,123 @@ const mqttHandle = async (topic, data) => {
         console.log(`Cannot register room ${data.group} for this user`);
         return;
       }
+    } else if (data.type === "encoder") {
+      const encoder = await EncoderModel.findOne({
+        user: data.clientID,
+        address: data.address,
+      });
+      if (!encoder) {
+        console.log("This user dont have this encoder");
+        return;
+      }
+      if (encoder.Group.includes(data.group)) {
+        console.log("This user registed room 1 before");
+        return;
+      }
+
+      const encoderRegiterRoom = await EncoderModel.findOneAndUpdate(
+        { user: data.clientID },
+        { $push: { Group: data.group } },
+        { new: true }
+      );
+      if (!encoderRegiterRoom) {
+        console.log(`Cannot register room ${data.group} for this user`);
+        return;
+      }
+    } else if (data.type === "rgb") {
+      const rgb = await RGBModel.findOne({
+        user: data.clientID,
+        address: data.address,
+      });
+      if (!rgb) {
+        console.log("This user dont have this rgb");
+        return;
+      }
+      if (rgb.Group.includes(data.group)) {
+        console.log("This user registed room 1 before");
+        return;
+      }
+
+      const rgbRegiterRoom = await RGBModel.findOneAndUpdate(
+        { user: data.clientID },
+        { $push: { Group: data.group } },
+        { new: true }
+      );
+      if (!rgbRegiterRoom) {
+        console.log(`Cannot register room ${data.group} for this user`);
+        return;
+      }
+    } else if (data.type === "siren") {
+      const siren = await SirenModel.findOne({
+        user: data.clientID,
+        address: data.address,
+      });
+      if (!siren) {
+        console.log("This user dont have this siren");
+        return;
+      }
+      if (siren.Group.includes(data.group)) {
+        console.log("This user registed room 1 before");
+        return;
+      }
+
+      const sirenRegiterRoom = await SirenModel.findOneAndUpdate(
+        { user: data.clientID },
+        { $push: { Group: data.group } },
+        { new: true }
+      );
+      if (!sirenRegiterRoom) {
+        console.log(`Cannot register room ${data.group} for this user`);
+        return;
+      }
+    } else if (data.type === "sensor") {
+      const sensor = await SensorModel.findOne({
+        user: data.clientID,
+        address: data.address,
+      });
+      if (!sensor) {
+        console.log("This user dont have this sensor");
+        return;
+      }
+      if (sensor.Group.includes(data.group)) {
+        console.log("This user registed room 1 before");
+        return;
+      }
+
+      const sensorRegiterRoom = await SensorModel.findOneAndUpdate(
+        { user: data.clientID },
+        { $push: { Group: data.group } },
+        { new: true }
+      );
+      if (!sensorRegiterRoom) {
+        console.log(`Cannot register room ${data.group} for this user`);
+        return;
+      }
+    } else if (data.type === "door") {
+      const door = await DoorModel.findOne({
+        user: data.clientID,
+        address: data.address,
+      });
+      if (!door) {
+        console.log("This user dont have this door");
+        return;
+      }
+      if (door.Group.includes(data.group)) {
+        console.log("This user registed room 1 before");
+        return;
+      }
+
+      const doorRegiterRoom = await DoorModel.findOneAndUpdate(
+        { user: data.clientID },
+        { $push: { Group: data.group } },
+        { new: true }
+      );
+      if (!doorRegiterRoom) {
+        console.log(`Cannot register room ${data.group} for this user`);
+        return;
+      }
     }
   } else if (topic === "/device/deleteroom") {
-    const user = await userModel.findById(data.clientID);
-    if (!user) {
-      console.log("Not exist user");
-      return;
-    }
     if (data.type === "button") {
       const button = await ButtonModel.findOne({
         user: data.clientID,
@@ -348,7 +446,9 @@ const mqttHandle = async (topic, data) => {
         Group: data.group,
       });
       if (!button) {
-        console.log("This user don't have this button or registed this room yet");
+        console.log(
+          "This user don't have this button or registed this room yet"
+        );
         return;
       }
       const buttonDeleteRoom = await ButtonModel.findOneAndUpdate(
@@ -359,6 +459,127 @@ const mqttHandle = async (topic, data) => {
         console.log(`Cannot delete room ${data.group} for this user`);
         return;
       }
+    } else if (data.type === "encoder") {
+      const encoder = await EncoderModel.findOne({
+        user: data.clientID,
+        address: data.address,
+        Group: data.group,
+      });
+      if (!encoder) {
+        console.log(
+          "This user don't have this encoder or registed this room yet"
+        );
+        return;
+      }
+      const encoderDeleteRoom = await EncoderModel.findOneAndUpdate(
+        { user: data.clientID },
+        { $pull: { Group: data.group } }
+      );
+      if (!encoderDeleteRoom) {
+        console.log(`Cannot delete room ${data.group} for this user`);
+        return;
+      }
+    } else if (data.type === "rgb") {
+      const rgb = await RGBModel.findOne({
+        user: data.clientID,
+        address: data.address,
+        Group: data.group,
+      });
+      if (!rgb) {
+        console.log("This user don't have this rgb or registed this room yet");
+        return;
+      }
+      const rgbDeleteRoom = await RGBModel.findOneAndUpdate(
+        { user: data.clientID },
+        { $pull: { Group: data.group } }
+      );
+      if (!rgbDeleteRoom) {
+        console.log(`Cannot delete room ${data.group} for this user`);
+        return;
+      }
+    } else if (data.type === "siren") {
+      const siren = await SirenModel.findOne({
+        user: data.clientID,
+        address: data.address,
+        Group: data.group,
+      });
+      if (!siren) {
+        console.log(
+          "This user don't have this siren or registed this room yet"
+        );
+        return;
+      }
+      const sirenDeleteRoom = await SirenModel.findOneAndUpdate(
+        { user: data.clientID },
+        { $pull: { Group: data.group } }
+      );
+      if (!sirenDeleteRoom) {
+        console.log(`Cannot delete room ${data.group} for this user`);
+        return;
+      }
+    } else if (data.type === "sensor") {
+      const sensor = await SensorModel.findOne({
+        user: data.clientID,
+        address: data.address,
+        Group: data.group,
+      });
+      if (!sensor) {
+        console.log(
+          "This user don't have this button or registed this room yet"
+        );
+        return;
+      }
+      const sensorDeleteRoom = await SensorModel.findOneAndUpdate(
+        { user: data.clientID },
+        { $pull: { Group: data.group } }
+      );
+      if (!sensorDeleteRoom) {
+        console.log(`Cannot delete room ${data.group} for this user`);
+        return;
+      }
+    } else if (data.type === "door") {
+      const door = await ButtonModel.findOne({
+        user: data.clientID,
+        address: data.address,
+        Group: data.group,
+      });
+      if (!door) {
+        console.log("This user don't have this door or registed this room yet");
+        return;
+      }
+      const doorDeleteRoom = await DoorModel.findOneAndUpdate(
+        { user: data.clientID },
+        { $pull: { Group: data.group } }
+      );
+      if (!doorDeleteRoom) {
+        console.log(`Cannot delete room ${data.group} for this user`);
+        return;
+      }
+    }
+  } else if (topic === "/device/sensor/update") {
+    const sensor = SensorModel.findOne({
+      user: data.clientID,
+      address: data.address,
+    });
+    if (!sensor) {
+      console.log("This user dont have sensor");
+      return;
+    }
+
+    const sensorUpdate = SensorModel.findOneAndUpdate(
+      {
+        user: data.clientID,
+        address: data.address,
+      },
+      {
+        temperature: data.temperature,
+        humidity: data.humidity,
+        smoke: data.smoke,
+      }
+    );
+    if (!sensorUpdate) {
+      console.log("Cannot update sensor data");
+      return;
     }
   }
 };

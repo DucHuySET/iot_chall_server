@@ -10,13 +10,12 @@ const sirenSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
-  Control: {
+  control: {
     type: Boolean,
     default: 0,
   },
   address: {
     type: String,
-    unique: true,
   },
   Group: {
     type: Array,
